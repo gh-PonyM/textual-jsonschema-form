@@ -38,9 +38,10 @@ class JSONFieldParametersBase(Generic[FactoryType, ValidatorType], abc.ABC):
     attrs: dict
     validators: list[ValidatorType] | None = None
 
-    def get_factory(self) -> type[FactoryType]:
+    # TODO: how to type annotate the return value?
+    def get_factory(self):
         if self.factory:
-            return self.factory  # type: ignore
+            return self.factory
         raise NotImplementedError(
             f"class {self.__class__.__name__} must implement this"
         )

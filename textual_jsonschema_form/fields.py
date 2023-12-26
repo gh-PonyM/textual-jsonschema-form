@@ -66,12 +66,10 @@ class Field(Protocol):
     """Field to use for custom widgets to be used by the form"""
 
     @property
-    def form_data(self) -> Any:
-        ...
+    def form_data(self) -> Any: ...
 
     @form_data.setter
-    def form_data(self, value):
-        ...
+    def form_data(self, value): ...
 
     @property
     def is_valid(self) -> bool:
@@ -305,17 +303,13 @@ class FormInput(Input):
         return {
             "date": Function(
                 partial(valid_date_by_format, date_fmt=cls.INPUT_DATE_FORMAT),
-                (
-                    "Is not a valid date of format"
-                    f" '{example_date(cls.INPUT_DATE_FORMAT)}'"
-                ),
+                "Is not a valid date of format"
+                f" '{example_date(cls.INPUT_DATE_FORMAT)}'",
             ),
             "date-time": Function(
                 partial(valid_date_by_format, date_fmt=cls.INPUT_DATETIME_FORMAT),
-                (
-                    "Is not a valid date of format"
-                    f" '{example_date(cls.INPUT_DATETIME_FORMAT)}'"
-                ),
+                "Is not a valid date of format"
+                f" '{example_date(cls.INPUT_DATETIME_FORMAT)}'",
             ),
             "file-path": Function(
                 valid_file_path,

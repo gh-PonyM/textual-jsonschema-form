@@ -196,6 +196,8 @@ class TextualArrayParams(JSONFieldParametersBase):
 
         def subfield_factory(**kwargs):
             f = self.subfield
+            if not f:
+                raise NotImplementedError()
             opts_ = f.get_options()
             opts_.update(kwargs)
             return f.get_factory()(**opts_)
@@ -264,10 +266,16 @@ class TextualArrayParams(JSONFieldParametersBase):
 @dataclass
 class TextualObjectParams(JSONFieldParametersBase):
     supported = {"object"}
-    fields: dict[
-        str,
-        TextualArrayParams | TextualNumberParam | TextualStringParam | TextualBoolParam,
-    ] | None = None
+    fields: (
+        dict[
+            str,
+            TextualArrayParams
+            | TextualNumberParam
+            | TextualStringParam
+            | TextualBoolParam,
+        ]
+        | None
+    ) = None
     defs_key: ClassVar[str] = "$defs"
     ignore = JSONFieldParametersBase.ignore | {
         "properties",
