@@ -1,9 +1,5 @@
 ::: textual_jsonschema_form
 
-```python
+Take a look at the tests directory and run the user app:
 
-from textual_jsonschema_form import *
-
-# Put examples here
-
-```
+     textual run --dev tests/test_form.py

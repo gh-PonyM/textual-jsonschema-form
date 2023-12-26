@@ -11,12 +11,14 @@ repos:
       - id: trailing-whitespace
         exclude: '.bumpversion.cfg'
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.230"
-    hooks:
-      - id: ruff
+# Pre-commit does not respect settings in pyproject.toml, pre-commit might also be removed in the future
 
-  - repo: https://github.com/psf/black
-    rev: "22.8.0"
-    hooks:
-      - id: black
+#  - repo: https://github.com/charliermarsh/ruff-pre-commit
+#    rev: "v0.0.230"
+#    hooks:
+#      - id: ruff
+
+#  - repo: https://github.com/psf/black
+#    rev: "22.8.0"
+#    hooks:
+#      - id: black
