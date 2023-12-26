@@ -1,11 +1,14 @@
+import json
 from datetime import date
 from enum import Enum
 from typing import Literal
 
 import pytest
 from pydantic import BaseModel, Field
+from textual import on
 from textual.app import App, ComposeResult
 from textual.validation import Function, Integer
+from textual.widgets import Footer
 
 from textual_jsonschema_form import FormContainer
 from textual_jsonschema_form.converter import TextualObjectParams
@@ -35,9 +38,9 @@ class Interests(str, Enum):
 
 class Address(BaseModel):
     street: str = Field(title="Street Name")
-    street_num: str = Field("25b", title="Street Number")
+    street_num: str = Field(title="Street Number")
     postal_code: int
-    city: str = Field("Springfield", description="City")
+    city: str = Field(description="City")
 
 
 class UserModel(BaseModel):
@@ -68,12 +71,14 @@ class UserApp(App):
     def compose(self) -> ComposeResult:
         schema = UserModel.model_json_schema()
         yield FormContainer(model=TextualObjectParams.from_jsonschema(schema))
-
-    def on_mount(self):
-        self.query_one(FormContainer).form_data = user_data
+        yield Footer()
 
     def action_load_data(self):
         self.query_one(FormContainer).form_data = user_data
+
+    @on(FormContainer.FormSubmitted)
+    def on_submit_form(self, event: FormContainer.FormSubmitted):
+        self.notify(json.dumps(event.form_data, indent=2), timeout=7)
 
 
 @pytest.mark.parametrize(

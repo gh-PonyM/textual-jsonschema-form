@@ -9,6 +9,7 @@ copyright: Maintained by <a href="https://gh-PonyM.com">Florian</a>.
 
 nav:
   - Home: index.md
+  - Examples: examples.md
 plugins:
   - search
   - mkdocstrings:

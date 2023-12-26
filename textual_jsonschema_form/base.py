@@ -68,7 +68,6 @@ class FormContainer(BaseForm):
         pass
 
     def get_field_label(self, field_id: str):
-        """Retrieve the label attached to a field id"""
         return self.query_one(f"#{FormContainer.container_id(field_id)}").query_one(
             FormContainer.FORM_LABEL_WIDGET
         )
