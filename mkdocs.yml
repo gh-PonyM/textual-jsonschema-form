@@ -10,6 +10,7 @@ copyright: Maintained by <a href="https://gh-PonyM.com">Florian</a>.
 nav:
   - Home: index.md
   - Examples: examples.md
+  - Code: code.md
 plugins:
   - search
   - mkdocstrings:

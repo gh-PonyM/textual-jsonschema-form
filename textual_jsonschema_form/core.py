@@ -1,6 +1,6 @@
 import abc
 from collections.abc import Generator
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import ClassVar, Generic, TypeVar
 
 FactoryType = TypeVar("FactoryType")
@@ -8,12 +8,14 @@ ValidatorType = TypeVar("ValidatorType")
 
 
 def strip_cmp_path(ref: str) -> str:
+    # TODO: can't handle all sorts of jsonschema, the standard by jsonschema would be '$definitions' instead of
+    # $defs
     return ref.replace("#/components/schemas/", "").replace("#/$defs/", "")
 
 
 @dataclass
 class JSONFieldParametersBase(Generic[FactoryType, ValidatorType], abc.ABC):
-    """The Base Adapter to convert a json-schema using different converts to end up with
+    """The Base Adapter to convert a json-schema using different converters to end up with
     different object adapters or to generate code out of those converters"""
 
     supported: ClassVar[set[str]]
@@ -98,34 +100,3 @@ class JSONFieldParametersBase(Generic[FactoryType, ValidatorType], abc.ABC):
             attrs=attrs,
             validators=validators,
         )
-
-
-@dataclass
-class Converter:
-    """Registry for typer cli type conversion from jsonschema"""
-
-    converters: dict[str, type[JSONFieldParametersBase]] = field(
-        default_factory=lambda: {}
-    )
-
-    def register(self, type_: str):
-        def type_registration(converter: type[JSONFieldParametersBase]):
-            self.converters[type_] = converter
-            return converter
-
-        return type_registration
-
-    def lookup(
-        self, type_: str, defs: dict | None = None
-    ) -> type[JSONFieldParametersBase]:
-        return self.converters[type_]
-
-
-@dataclass
-class TyperConverter(Converter):
-    """Registry for textual forms from jsonschema"""
-
-    pass
-
-
-typer_converter = TyperConverter()

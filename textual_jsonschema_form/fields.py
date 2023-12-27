@@ -1,7 +1,8 @@
 from collections.abc import Callable, Iterable
 from datetime import date, datetime
 from functools import partial
-from typing import Any, ClassVar, Protocol
+from pathlib import Path
+from typing import Any, ClassVar, Generator, Protocol
 
 from rich.highlighter import Highlighter
 from textual import on
@@ -29,6 +30,7 @@ from .validators import (
     is_absolute_path,
     valid_date_by_format,
     valid_file_path,
+    valid_folder,
 )
 
 
@@ -37,7 +39,7 @@ def date_to_string(value: date | datetime, fmt: str) -> str:
 
 
 class WithHiddenClass(Widget):
-    """A base for items that can be hidden by a class"""
+    """A base for items that can be hidden by a class using a reactive attribute"""
 
     HIDDEN_CLASS: str = "hidden"
     show: Reactive[bool] = var(True)
@@ -127,7 +129,7 @@ class ActionBtn(Button):
 
 
 class BaseForm(Container):
-    """Structural container to hold a subform"""
+    """Structural container to hold a subform."""
 
     DEFAULT_CSS = """
     BaseForm {
@@ -189,10 +191,10 @@ class BaseForm(Container):
     def form_data(self, data: dict):
         """Converts and populates data into the form"""
         for field in self.form_input_fields:
-            field_id = field.id
-            if field_id not in data:
+            key = self.data_key(field.id)
+            if key not in data:
                 continue
-            field.form_data = data[field_id]
+            field.form_data = data[key]
 
     @property
     def is_valid(self) -> bool:
@@ -204,18 +206,33 @@ class BaseForm(Container):
         return True
 
     def _validation_id(self, input_id):
+        """Returns the id of the validation field for a given input field id"""
         return f"validate-{input_id}"
 
     def _validation_info(self, input_id, hidden: bool = True):
+        """Returns an instance of the validation field"""
         o = ValidationInfo([], id=self._validation_id(input_id))
         # Class to hide is handled by reactive attribute
         o.show = not hidden
         return o
 
+    def validation_fields(self):
+        """A DOM query that returns all validation info fields that are currently shown"""
+        for f in self.query(ValidationInfo):
+            if f.show:
+                yield f
+
+    def validation_errors(self) -> Generator[tuple[str, list[str]], None, None]:
+        """Returns the validation errors as list for each field with a shown validation field"""
+        for f in self.validation_fields():
+            yield f.id, f._renderable._object
+
     def info_field(self, input_id: str) -> ValidationInfo:
+        """Returns the validation info field for a given input field id"""
         return self.query_one(f"#{self._validation_id(input_id)}", ValidationInfo)
 
     def update_info_field(self, failures: list[str], input_id: str):
+        """Update the validation info field using a list of failure messages"""
         if not failures:
             self.info_field(input_id).hide()
             return
@@ -225,10 +242,12 @@ class BaseForm(Container):
 
     @classmethod
     def _label_text(cls, label: str, required: bool = True):
+        """Constructs a label for a optional or required field"""
         return f"{label}[red]^[/red]" if required else label
 
     @classmethod
     def _label(cls, label: str, required: bool = True):
+        """Returns an instance of a label field"""
         return cls.FORM_LABEL_WIDGET(cls._label_text(label, required))
 
 
@@ -238,6 +257,11 @@ class FormInput(Input):
     INPUT_DATE_FORMAT: ClassVar[str] = "%d.%m.%Y"
     INPUT_DATETIME_FORMAT: ClassVar[str] = "%d.%m.%Y %H:%M"
     INPUT_VALIDATE_ON: ClassVar[Iterable[InputValidationOn] | None] = ("changed",)
+    ALWAYS_REVALIDATE_FORMATS: ClassVar[set[str]] = {
+        "path",
+        "directory-path",
+        "file-path",
+    }
 
     def __init__(
         self,
@@ -263,6 +287,10 @@ class FormInput(Input):
         exclusive_minimum: int | None = None,
         exclusive_maximum: int | None = None,
     ) -> None:
+        # If no validators are given and the valid_empty is False, no validation occurs
+        # Subsequent validator can pass when an empty value is given, e.g. for path validation
+        if not validators and not valid_empty:
+            validators = [Function(empty_value, "Field can not be empty")]
         super().__init__(
             value,
             placeholder,
@@ -294,12 +322,10 @@ class FormInput(Input):
             )
         self.format = format
 
-        # If no validators are given and the valid_empty is False, not validation occurs
-        if not self.validators and not self.valid_empty:
-            self.validators.append(Function(empty_value, "Field can not be empty"))
-
     @classmethod
     def get_validator_for_format(cls, fmt: str) -> Validator | None:
+        """Returns the validator for a specific format. If the field is optional, use a validator that
+        returns True on empty values"""
         return {
             "date": Function(
                 partial(valid_date_by_format, date_fmt=cls.INPUT_DATE_FORMAT),
@@ -316,7 +342,7 @@ class FormInput(Input):
                 "File does not exist",
             ),
             "directory-path": Function(
-                valid_file_path,
+                valid_folder,
                 "Directory does not exist",
             ),
             "path": Function(
@@ -326,19 +352,40 @@ class FormInput(Input):
         }.get(fmt)
 
     @classmethod
-    def get_setter_for_format(cls, fmt: str | None, default: Any):
+    def _getter_formatter(cls, fmt: str | None, default: Callable[[str], Any]):
+        """Formatters for conversion from field value to the correct jsonschema type and format."""
+        return {
+            "number": float,
+            "integer": int,
+            "path": Path,
+            "file-path": Path,
+            "directory-path": Path,
+            "date": lambda x: datetime.strptime(x, cls.INPUT_DATETIME_FORMAT).date(),
+            "date-time": lambda x: datetime.strptime(x, cls.INPUT_DATETIME_FORMAT),
+            None: default,
+        }.get(fmt, default)
+
+    @classmethod
+    def _setter_formatter(cls, fmt: str | None, default: Callable[[Any], str]):
         """Returns a special setter function that is responsible to populate the field value with
-        the string representation of this data. The representation must be compatible with eventual validators
+        the string representation of this data. The representation must be compatible with validators if any.
         """
         return {
             "date": partial(date_to_string, fmt=cls.INPUT_DATE_FORMAT),
             "date-time": partial(date_to_string, fmt=cls.INPUT_DATETIME_FORMAT),
+            "path": lambda p: str(p),
+            "file-path": lambda p: str(p),
+            "directory-path": lambda p: str(p),
             None: lambda x: str(x),
         }.get(fmt, default)
 
     def validated(self) -> bool:
+        """Checks if the field has any validators. Some formats are always re-validated on submit,
+        e.g. for a file path"""
         if not self.validate_on and not self.validators:
             return True
+        if self.format in self.ALWAYS_REVALIDATE_FORMATS:
+            return False
         classes = self.classes
         if "-valid" in classes or "-invalid" in classes:
             return True
@@ -346,27 +393,37 @@ class FormInput(Input):
 
     @property
     def is_valid(self) -> bool:
+        """Checks if the field is valid, calling the 'validate' if the field needs to be re-validated"""
         if not self.validated():
             self.validate(self.value)
         return super().is_valid
 
     @property
     def form_data(self):
-        return self.value
+        return (
+            self._getter_formatter(self.format or self.type, lambda x: x)(self.value)
+            if self.value != ""
+            else None
+        )
 
     @form_data.setter
     def form_data(self, data):
-        self.value = self.get_setter_for_format(self.format, lambda x: x)(data)
+        if data is None:
+            self.value = ""
+            return
+        self.value = self._setter_formatter(self.format, lambda x: str(x))(data)
 
 
 class FormSwitch(Switch):
+    """A Switch Widget implementation"""
+
     @property
     def form_data(self) -> bool:
         return self.value
 
     @form_data.setter
     def form_data(self, data):
-        self.value = data
+        self.value = bool(data)
 
     @property
     def is_valid(self) -> bool:
@@ -377,6 +434,8 @@ class FormSwitch(Switch):
 
 
 class FormStrSelect(Select[str]):
+    """A Select Widget implementation for strings"""
+
     @property
     def form_data(self) -> str | None:
         if isinstance(self.value, NoSelection) or self.value == Select.BLANK:
@@ -396,6 +455,8 @@ class FormStrSelect(Select[str]):
 
 
 class FormStrMultiSelect(SelectionList[str]):
+    """A SelectionList implementation for strings"""
+
     @property
     def is_valid(self) -> bool:
         return True
@@ -512,8 +573,8 @@ class ArrayField(FormField):
 
     @property
     def is_valid(self) -> bool:
-        """Returns in all fields are valid. Using the tuple here to makes sure all fields are called. The field
-        should be validated if it wasn't already when calling this property."""
+        """Returns in all fields are valid. The field should be validated if it wasn't already when
+        calling this property."""
         return all(tuple(d.is_valid for d in self.form_input_fields))
 
     def validated(self) -> bool:

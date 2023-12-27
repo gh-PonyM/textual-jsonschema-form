@@ -54,7 +54,9 @@ class NumberRange(Number):
         return super().describe_failure(failure)
 
 
-def valid_date_by_format(value: str, date_fmt: str) -> bool:
+def valid_date_by_format(value: str, date_fmt: str, valid_empty: bool = True) -> bool:
+    if not value:
+        return valid_empty
     try:
         datetime.strptime(value, date_fmt)
     except ValueError:
@@ -67,24 +69,25 @@ def example_date(fmt: str) -> str:
     return datetime.today().strftime(fmt)
 
 
-@lru_cache(maxsize=64)
-def valid_file_path(value: str) -> bool:
-    try:
-        return Path(value).is_file()
-    except Exception:
-        return False
+def valid_file_path(value: str, valid_empty: bool = True) -> bool:
+    """Validates if a file exists. The function is not cached, since a file can appear on the system
+    any time"""
+    if not value:
+        return valid_empty
+    return Path(value).is_file()
 
 
-@lru_cache(maxsize=64)
-def valid_folder(value: str) -> bool:
-    try:
-        return Path(value).is_dir()
-    except Exception:
-        return False
+def valid_folder(value: str, valid_empty: bool = True) -> bool:
+    """Validates if a folder exists. The function is not cached, since a folder can appear on the system
+    any time"""
+    if not value:
+        return valid_empty
+    return Path(value).is_dir()
 
 
-@lru_cache(maxsize=64)
-def is_absolute_path(value: str) -> bool:
+def is_absolute_path(value: str, valid_empty: bool = True) -> bool:
+    if not value:
+        return valid_empty
     p = Path(value)
     if p.expanduser().parts != p.parts:
         return True
@@ -95,4 +98,5 @@ def is_absolute_path(value: str) -> bool:
 
 @lru_cache(maxsize=64)
 def empty_value(value: str) -> bool:
+    """A validator to add when Input.valid_empty is not True"""
     return bool(value)

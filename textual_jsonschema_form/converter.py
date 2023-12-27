@@ -35,6 +35,7 @@ class InputBase(JSONFieldParametersBase[FormInput, Validator]):
             "max_length": self.attrs.get("max_length", 0),
             "suggester": self.attrs.get("suggester"),
             "validators": self.validators,
+            "type": {"string": "text"}.get(self.type, self.type),
         }
 
     def get_factory(self) -> type[FormInput]:
@@ -162,17 +163,13 @@ class TextualNumberParam(InputBase):
         return vals, attrs
 
     def get_options(self):
-        opts = {
+        return {
             "minimum": self.attrs.get("minimum"),
             "exclusive_minimum": self.attrs.get("minimum"),
             "exclusive_maximum": self.attrs.get("minimum"),
             "maximum": self.attrs.get("maximum"),
             **super().get_options(),
         }
-        if not self.validators:
-            # The type can be omitted if any validators are specified, see FormInput implementation
-            opts["type"] = self.type
-        return opts
 
 
 @textual_converter.register("array")

@@ -1,7 +1,5 @@
-::: textual_jsonschema_form
+# Examples
 
-## Examples
+To get started, run `poetry install` and run the user app:
 
-Take a look at the tests directory and run the user app:
-
-     textual run --dev tests/test_form.py
+     textual run examples/user_app.py

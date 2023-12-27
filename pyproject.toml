@@ -15,7 +15,6 @@ python = ">=3.8,<4.0"
 textual = "^0.46.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 mypy = "^1.5.1"
 pre-commit = "^3.4.0"
@@ -26,6 +25,7 @@ textual-dev = "^1.3.0"
 ruff = "^0.1.9"
 pytest-asyncio = "^0.23.2"
 black = "^23.12.1"
+pytest = "^7.4.3"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.4.2"
@@ -35,6 +35,10 @@ mkdocstrings = {extras = ["python"], version = "^0.23.0"}
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
 
 [tool.black]
 line-length = 88
@@ -66,8 +70,12 @@ warn_return_any = "True"
 warn_unused_ignores = "True"
 show_error_codes = "True"
 
+exclude = [
+  'tests'
+]
+
 [tool.ruff]
-target-version = "py310"
+target-version = "py38"
 line-length = 88
 fix = true
 select = [

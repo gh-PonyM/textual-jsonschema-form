@@ -78,7 +78,7 @@ class FormContainer(BaseForm):
                 if field.id == input_id:
                     return field
                 elif hasattr(field, "form_input_fields"):
-                    iter_fields(field)
+                    iter_fields(field.form_input_fields)
 
         return iter_fields(self.form_input_fields)
 

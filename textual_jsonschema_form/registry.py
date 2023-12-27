@@ -4,28 +4,7 @@ from .core import JSONFieldParametersBase
 
 
 @dataclass
-class Converter:
-    """Registry for typer cli type conversion from jsonschema"""
-
-    converters: dict[str, type[JSONFieldParametersBase]] = field(
-        default_factory=lambda: {}
-    )
-
-    def register(self, type_: str):
-        def type_registration(converter: type[JSONFieldParametersBase]):
-            self.converters[type_] = converter
-            return converter
-
-        return type_registration
-
-    def lookup(
-        self, type_: str, defs: dict | None = None
-    ) -> type[JSONFieldParametersBase]:
-        return self.converters[type_]
-
-
-@dataclass
-class TextualConverter(Converter):
+class TextualConverter:
     """Registry for typer cli type conversion from jsonschema"""
 
     converters: dict[str, type[JSONFieldParametersBase]] = field(
