@@ -74,7 +74,7 @@ async def load_and_check(pilot, valid_as_is: bool = False):
 
 class StringModel(TBaseModel):
 
-    _test_data: ClassVar = {"s": "Anderson Paak is great", "c": "B"}
+    _test_data: ClassVar[dict] = {"s": "Anderson Paak is great", "c": "B"}
 
     s: str
     s_d: str = "Foobar"
@@ -120,7 +120,7 @@ def existing_path():
 
 
 class StringWithFormatModel(TBaseModel):
-    _test_data: ClassVar = {"p": existing_path(), "d": existing_path()}
+    _test_data: ClassVar[dict] = {"p": existing_path(), "d": existing_path()}
 
     p: Path
     d: DirectoryPath
@@ -175,7 +175,7 @@ async def test_string_format_form(temporary_directory):
 
 class NumberModel(TBaseModel):
 
-    _test_data: ClassVar = {"i": 5, "f": 0.1, "c": 15}
+    _test_data: ClassVar[dict] = {"i": 5, "f": 0.1, "c": 15}
 
     i: int
     i_f: int = 0
@@ -203,7 +203,7 @@ async def test_number_form():
 
 
 class BooleanModel(TBaseModel):
-    _test_data: ClassVar = {"a": True, "a_n": False}
+    _test_data: ClassVar[dict] = {"a": True, "a_n": False}
 
     a: bool
     # Quite an edge case...
@@ -228,7 +228,7 @@ async def test_bool_form():
 
 
 class ArrayStringModel(TBaseModel):
-    _test_data: ClassVar = {"i": ["A", "B"]}
+    _test_data: ClassVar[dict] = {"i": ["A", "B"]}
 
     # We do not load data for the tuple to check values since jsonschema
     # just knows the array type, but pydantic generates the same schema as for using list
@@ -248,7 +248,7 @@ async def test_array_string_form():
 
 
 class NestedModel(TBaseModel):
-    _test_data: ClassVar = {
+    _test_data: ClassVar[dict] = {
         "bools": BooleanModel._test_data,
         "strings": StringModel._test_data,
         "array_str": ArrayStringModel._test_data,
