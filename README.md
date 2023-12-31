@@ -11,9 +11,13 @@ Textual forms based on jsonschema
 - **Github repository**: <https://github.com/gh-PonyM/textual-jsonschema-form/>
 - **Documentation** <https://gh-PonyM.github.io/textual-jsonschema-form/>
 
+## Usage
+
+Please take a look into the provided [user app](examples/user_app.py) example.
+
 ## Development
 
-Install the environment and the pre-commit hooks with
+Install the environment with
 
 ```bash
 make install
