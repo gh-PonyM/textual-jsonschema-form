@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import ClassVar, Type
+from typing import ClassVar
 
 from textual.suggester import SuggestFromList
 from textual.validation import Integer, Number, Validator
@@ -13,7 +14,7 @@ from .validators import NumberRange
 
 
 class InputBase(JSONFieldParametersBase[FormInput, Validator]):
-    factory: ClassVar[Type[FormInput]] = FormInput
+    factory: ClassVar[type[FormInput]] = FormInput
 
     @classmethod
     def extract(cls, params: dict, available: set[str]) -> tuple[list[Validator], dict]:
@@ -39,7 +40,7 @@ class InputBase(JSONFieldParametersBase[FormInput, Validator]):
             "type": {"string": "text"}.get(self.type, self.type),
         }
 
-    def get_factory(self) -> Type[FormInput]:
+    def get_factory(self) -> type[FormInput]:
         return self.factory
 
 

@@ -9,8 +9,7 @@ install: ## Install the poetry environment and install the pre-commit hooks
 check: ## Run code quality tools.
 	@echo "🚀 Checking Poetry lock file consistency with 'pyproject.toml': Running poetry lock --check"
 	@poetry check --lock
-	@echo "🚀 Linting code: Running black and ruff"
-	@poetry run black .
+	@echo "🚀 Linting code: Running ruff"
 	@poetry run ruff .
 	@echo "🚀 Static type checking: Running mypy"
 	@poetry run mypy .

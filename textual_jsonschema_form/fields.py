@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from collections.abc import Callable, Iterable
 from datetime import date, datetime
 from functools import partial
@@ -468,7 +469,7 @@ class FormStrMultiSelect(SelectionList[str]):
     @classmethod
     def from_obj(
         cls, data: Iterable[str], options: Iterable[str], **kwargs
-    ) -> "FormStrMultiSelect":
+    ) -> FormStrMultiSelect:
         choices: tuple[tuple[str, str] | tuple[str, str, bool], ...] = tuple(
             (t, t, True) if t in (data or []) else (t, t) for t in options
         )
