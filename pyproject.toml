@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "textual_jsonschema_form"
-version = "0.0.1"
+version = "0.1.0"
 description = "Textual forms based on jsonschema"
 authors = ["Lukas Burkhard <dev@lksch.ch>"]
 repository = "https://github.com/gh-PonyM/textual-jsonschema-form"

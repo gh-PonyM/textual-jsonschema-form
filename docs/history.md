@@ -2,6 +2,8 @@
 
 **unreleased**
 
+**0.1.0 (07.01.24)**
+
 - Add documentation and example `user_app.py`
 - Drop support for python 3.8 and 3.9 (due to typing issues)
 - Implement base set of Fields excluding ArrayFields for non-enums
