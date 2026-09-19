@@ -17,7 +17,7 @@ uv run pytest
 uv run ruff check .
 
 # Type check
-uv run mypy .
+uv run ty check
 
 # Build package
 uv build
@@ -34,7 +34,7 @@ uv build
 
 - **Runtime**: `textual>=0.40.0`
 - **Python**: `>=3.12,<4.0`
-- **Dev group**: pytest, mypy, ty, ruff, pre-commit, tox, bump2version, pydantic, textual-dev
+- **Dev group**: pytest, ty, ruff, pre-commit, tox, bump2version, pydantic, textual-dev
 - **Docs group**: mkdocs, mkdocs-material, mkdocstrings[python]
 
 Dependency groups are in `[dependency-groups]` in `pyproject.toml`.
@@ -44,8 +44,7 @@ Dependency groups are in `[dependency-groups]` in `pyproject.toml`.
 - `uv run pytest` -- run tests
 - `uv run ruff check .` -- lint
 - `uv run ruff format .` -- format
-- `uv run mypy .` -- type check
-- `uv run ty .` -- type check (alternative)
+- `uv run ty check` -- type check
 - `uv build` -- build wheel/sdist
 - `uv lock --check` -- verify lock file consistency
 - `uv sync` -- install/sync dependencies
@@ -53,7 +52,7 @@ Dependency groups are in `[dependency-groups]` in `pyproject.toml`.
 ## Code Style
 
 - **Linter/formatter**: ruff
-- **Type checker**: mypy
+- **Type checker**: ty
 - **Target Python**: 3.12
 - Line length: 88
 - Use `from __future__ import annotations` in test files
