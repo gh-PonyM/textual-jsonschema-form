@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Generator, Iterable
 from datetime import date, datetime
 from functools import partial
 from pathlib import Path
-from typing import Any, ClassVar, Generator, Protocol
+from typing import Any, ClassVar, Protocol
 
 from rich.highlighter import Highlighter
 from textual import on

@@ -1,28 +1,27 @@
 .PHONY: install
-install: ## Install the poetry environment and install the pre-commit hooks
-	@echo "🚀 Creating virtual environment using pyenv and poetry"
-	@poetry install
-	@ poetry run pre-commit install
-	@poetry shell
+install: ## Install the uv environment and install the pre-commit hooks
+	@echo "Creating virtual environment using uv"
+	@uv sync
+	@uv run pre-commit install
 
 .PHONY: check
 check: ## Run code quality tools.
-	@echo "🚀 Checking Poetry lock file consistency with 'pyproject.toml': Running poetry lock --check"
-	@poetry check --lock
-	@echo "🚀 Linting code: Running ruff"
-	@poetry run ruff .
-	@echo "🚀 Static type checking: Running mypy"
-	@poetry run mypy .
+	@echo "Checking uv lock file consistency with pyproject.toml"
+	@uv lock --check
+	@echo "Linting code: Running ruff"
+	@uv run ruff check .
+	@echo "Static type checking: Running mypy"
+	@uv run mypy .
 
 .PHONY: test
 test: ## Test the code with pytest
-	@echo "🚀 Testing code: Running pytest"
-	@poetry run pytest --cov --cov-config=pyproject.toml --cov-report=xml
+	@echo "Testing code: Running pytest"
+	@uv run pytest --cov --cov-config=pyproject.toml --cov-report=xml
 
 .PHONY: build
-build: clean-build ## Build wheel file using poetry
-	@echo "🚀 Creating wheel file"
-	@poetry build
+build: clean-build ## Build wheel file using uv
+	@echo "Creating wheel file"
+	@uv build
 
 .PHONY: clean-build
 clean-build: ## clean build artifacts
@@ -30,22 +29,21 @@ clean-build: ## clean build artifacts
 
 .PHONY: publish
 publish: ## publish a release to pypi.
-	@echo "🚀 Publishing: Dry run."
-	@poetry config pypi-token.pypi $(PYPI_TOKEN)
-	@poetry publish --dry-run
-	@echo "🚀 Publishing."
-	@poetry publish
+	@echo "Publishing: Dry run."
+	@UV_PUBLISH_TOKEN=$(PYPI_TOKEN) uv publish --dry-run
+	@echo "Publishing."
+	@UV_PUBLISH_TOKEN=$(PYPI_TOKEN) uv publish
 
 .PHONY: build-and-publish
 build-and-publish: build publish ## Build and publish.
 
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
-	@poetry run mkdocs build -s
+	@uv run mkdocs build -s
 
 .PHONY: docs
 docs: ## Build and serve the documentation
-	@poetry run mkdocs serve --livereload
+	@uv run mkdocs serve --livereload
 
 .PHONY: help
 help:

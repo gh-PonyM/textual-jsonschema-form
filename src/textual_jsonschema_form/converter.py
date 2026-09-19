@@ -378,7 +378,7 @@ class TextualObjectParams(JSONFieldParametersBase):
     @classmethod
     def from_json_field(cls, field_name: str, required: bool, params: dict):
         available = cls.validate_params(params)
-        properties = params.get("properties", None)
+        properties = params.get("properties")
         if properties is None:
             raise NotImplementedError("Missing properties.")
         fields = {}

@@ -1,46 +1,49 @@
-[tool.poetry]
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13"]
+build-backend = "uv_build"
+
+[project]
 name = "textual_jsonschema_form"
 version = "0.1.0"
 description = "Textual forms based on jsonschema"
-authors = ["Lukas Burkhard <dev@lksch.ch>"]
-repository = "https://github.com/gh-PonyM/textual-jsonschema-form"
-documentation = "https://gh-PonyM.github.io/textual-jsonschema-form/"
-readme = "README.md"
-packages = [
-  {include = "textual_jsonschema_form"}
+authors = [{ name = "Lukas Burkhard", email = "dev@lksch.ch" }]
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "textual>=0.40.0",
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<4.0"
-textual = ">=0.40.0"
+[project.urls]
+Repository = "https://github.com/gh-PonyM/textual-jsonschema-form"
+Documentation = "https://gh-PonyM.github.io/textual-jsonschema-form/"
 
-[tool.poetry.group.dev.dependencies]
-pytest-cov = "^4.0.0"
-mypy = "^1.5.1"
-pre-commit = "^3.4.0"
-tox = "^4.11.1"
-bump2version = "^1.0.1"
-pydantic = "^2.5.3"
-textual-dev = "^1.3.0"
-ruff = "^0.1.9"
-pytest-asyncio = "^0.23.2"
-pytest = "^7.4.3"
-
-[tool.poetry.group.docs.dependencies]
-mkdocs = "^1.4.2"
-mkdocs-material = "^9.2.7"
-mkdocstrings = {extras = ["python"], version = "^0.23.0"}
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "pytest-cov>=4.0.0",
+    "mypy>=1.5.1",
+    "ty>=0.0.82",
+    "pre-commit>=3.4.0",
+    "tox>=4.11.1",
+    "tox-uv>=1.0.0",
+    "bump2version>=1.0.1",
+    "pydantic>=2.5.3",
+    "textual-dev>=1.3.0",
+    "ruff>=0.1.9",
+    "pytest-asyncio>=0.23.2",
+    "pytest>=7.4.3",
+]
+docs = [
+    "mkdocs>=1.4.2",
+    "mkdocs-material>=9.2.7",
+    "mkdocstrings[python]>=0.23.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+pythonpath = ["."]
 
 [tool.mypy]
-files = ["textual_jsonschema_form"]
+files = ["src/textual_jsonschema_form"]
 disallow_untyped_defs = "False"
 disallow_any_unimported = "True"
 no_implicit_optional = "True"
@@ -54,57 +57,36 @@ exclude = [
 ]
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py312"
 line-length = 88
 fix = true
 select = [
-    # flake8-2020
     "YTT",
-    # flake8-bandit
     "S",
-    # flake8-bugbear
     "B",
-    # flake8-builtins
     "A",
-    # flake8-comprehensions
     "C4",
-    # flake8-debugger
     "T10",
-    # flake8-simplify
     "SIM",
-    # isort
     "I",
-    # mccabe
     "C90",
-    # pycodestyle
     "E", "W",
-    # pyflakes
     "F",
-    # pygrep-hooks
     "PGH",
-    # pyupgrade
     "UP",
-    # ruff
     "RUF",
-    # tryceratops
     "TRY",
 ]
 ignore = [
-    # LineTooLong
     "E501",
-    # DoNotAssignLambda
     "E731",
-    # Shadows Builtin
     "A002",
     "A003",
     "RUF012",
     "C408",
     "RUF015",
-    # function too complex
     "C901",
-    # Long mesage outside exception class
     "TRY003",
-    # Use specific rule codes when ignoring type issues
     "PGH003"
 ]
 

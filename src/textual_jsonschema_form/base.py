@@ -103,7 +103,13 @@ class FormContainer(BaseForm):
         if field.type not in {"boolean"}:
             yield self._validation_info(id_)
 
+    # async def _on_compose(self, event: events.Compose) -> None:
+    #     _rich_traceback_omit = True
+    #     event.prevent_default()
+    #     await self._compose(self.model)
+
     def _compose(
+
         self, model, parent_id: str | None = None, parent_label: str | None = None
     ) -> ComposeResult:
         for name, field in model.fields.items():
