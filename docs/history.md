@@ -2,6 +2,8 @@
 
 **unreleased**
 
+**1.0.0 (19.09.26)**
+
 **0.1.0 (07.01.24)**
 
 - Add documentation and example `user_app.py`

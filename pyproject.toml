@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "textual_jsonschema_form"
-version = "0.1.0"
+version = "1.0.0"
 description = "Textual forms based on jsonschema"
 authors = [{ name = "Lukas Burkhard", email = "dev@lksch.ch" }]
 requires-python = ">=3.12,<4.0"
