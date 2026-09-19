@@ -1646,7 +1646,7 @@ docs = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "textual", specifier = ">=0.40.0" }]
+requires-dist = [{ name = "textual", specifier = ">=8.2.0" }]
 
 [package.metadata.requires-dev]
 dev = [

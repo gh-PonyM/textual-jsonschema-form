@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import ClassVar, Literal
@@ -330,3 +331,27 @@ async def test_user_form_app():
         for attr in ("first_name", "age", "country"):
             assert form.get_input(attr).form_data == user_data[attr]
         assert form.get_input("interests").form_data == user_data["interests"]
+
+
+class DateModel(TBaseModel):
+    _test_data: ClassVar[dict] = {"dob": date(1900, 4, 29), "dob_opt": None}
+
+    dob: date
+    dob_opt: date | None = None
+
+
+async def test_date_form():
+    """Test that date fields use the date-only format, not datetime format."""
+    async with FormApp(model=DateModel).run_test() as pilot:
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        form = app.form
+
+        inp = form.get_input("dob")
+        assert not inp.is_valid
+
+        inp = form.get_input("dob_opt")
+        assert inp.form_data is None
+        assert inp.is_valid
+
+        await load_and_check(pilot)

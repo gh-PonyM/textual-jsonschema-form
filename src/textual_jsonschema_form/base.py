@@ -8,7 +8,7 @@ from textual.app import ComposeResult
 from textual.message import Message
 from textual.reactive import Reactive, var
 from textual.widgets import Button, Input, Rule, Static, Tree
-from textual.widgets._tree import TreeNode
+from textual.widgets.tree import TreeNode
 
 from .converter import TextualArrayParams, TextualObjectParams
 from .core import JSONFieldParametersBase
