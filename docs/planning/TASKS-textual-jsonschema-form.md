@@ -11,9 +11,9 @@ Migrate the `textual-jsonschema-form` repo (`/home/pony_m/Repos/textual-jsonsche
 ## Progress Summary
 
 - Total Tasks: 8
-- Completed: 0
+- Completed: 8
 - In Progress: 0
-- Not Started: 8
+- Not Started: 0
 - Blocked: 0
 
 ## Breaking Changes Audit Results (textual-jsonschema-form)
@@ -46,7 +46,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 ### Infrastructure & Setup
 
 #### TASK-001: Update textual dependency constraint
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: High
 - **Complexity**: Low
 - **Dependencies**: None
@@ -60,7 +60,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 ### Core Functionality
 
 #### TASK-002: Rename `FormContainer._compose` → `_compose_form` (CRITICAL)
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: High
 - **Complexity**: Low
 - **Dependencies**: None
@@ -77,7 +77,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 - **Test First**: Yes (existing tests are the failing spec)
 
 #### TASK-003: Replace `Select.BLANK` with `Select.NULL`
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: High
 - **Complexity**: Low
 - **Dependencies**: None
@@ -92,7 +92,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 - **Test First**: Yes
 
 #### TASK-004: Fix `Pretty` object accessor
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: Medium
 - **Complexity**: Low
 - **Dependencies**: None
@@ -105,7 +105,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 ### Testing & Validation
 
 #### TASK-005: Update label assertions in tests
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: High
 - **Complexity**: Low
 - **Dependencies**: None
@@ -116,7 +116,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 - **Test First**: Yes (this IS the test update)
 
 #### TASK-006: Run full test suite
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: High
 - **Complexity**: Low
 - **Dependencies**: TASK-001, TASK-002, TASK-003, TASK-004, TASK-005
@@ -126,7 +126,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 - **Test First**: No (validation task)
 
 #### TASK-007: Lint, format, type-check
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: Medium
 - **Complexity**: Low
 - **Dependencies**: TASK-002, TASK-003, TASK-004, TASK-005
@@ -137,7 +137,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 - **Test First**: No
 
 #### TASK-008: Manual smoke test of example app
-- **Status**: Not Started
+- **Status**: [x] Done
 - **Priority**: Medium
 - **Complexity**: Low
 - **Dependencies**: TASK-006
@@ -150,7 +150,7 @@ Full checklist from the requirements doc, resolved against textual 8.2.8:
 ### Optional Hardening (post-migration, non-blocking)
 
 #### TASK-009: Migrate private imports to public paths
-- **Status**: Not Started
+- **Status**: [x] Done (partial — `InputType`/`InputValidationOn` have no public path)
 - **Priority**: Low
 - **Complexity**: Low
 - **Dependencies**: TASK-006
