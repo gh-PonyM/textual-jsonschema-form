@@ -559,7 +559,7 @@ class ArrayField(FormField):
             )
             yield ActionBtn(
                 "+",
-                id=self.action_add_btn_id(self.id),  # type: ignore
+                id=self.action_add_btn_id(self.id),
                 classes=self.ACTION_BTN_CLASS_ADD,
             )
         yield self.subfield_factory(classes=BaseForm.FORM_INPUTS_CLASS)

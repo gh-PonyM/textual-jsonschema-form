@@ -85,7 +85,9 @@ class StringModel(TBaseModel):
 
 async def test_string_form():
     async with FormApp(model=StringModel).run_test() as pilot:
-        form = pilot.app.form
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        form = app.form
         inp = form.get_input("s")
         assert inp.form_data is None
         assert not inp.is_valid
@@ -97,7 +99,7 @@ async def test_string_form():
         assert inp.is_valid
         inp = form.get_input("c")
 
-        assert pilot.app.converter.fields["c"].required
+        assert app.converter.fields["c"].required
         assert not inp._allow_blank, "Select widget is required"
         assert inp.form_data == "A", (
             "The widget has no blank option and uses the first choice as default"
@@ -105,7 +107,7 @@ async def test_string_form():
         assert inp.is_valid
 
         inp = form.get_input("c_d")
-        assert not pilot.app.converter.fields["c_d"].required
+        assert not app.converter.fields["c_d"].required
         assert inp._allow_blank
         assert inp.form_data is None
         assert inp.is_valid
@@ -132,10 +134,12 @@ class StringWithFormatModel(TBaseModel):
 async def test_string_format_form(temporary_directory):
     """Test all supported string formats including validators and submitting"""
     async with FormApp(model=StringWithFormatModel).run_test() as pilot:
-        form = pilot.app.form
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        form = app.form
 
         inp = form.get_input("p")
-        assert pilot.app.converter.fields["p"].required
+        assert app.converter.fields["p"].required
         assert inp.form_data is None
         assert not inp.is_valid
         assert inp.format == "path"
@@ -167,7 +171,7 @@ async def test_string_format_form(temporary_directory):
         assert inp.form_data is None
         assert not inp.valid_empty
         assert len(inp.validators) == 2, "Empty + directory validator"
-        assert pilot.app.converter.fields["d"].attrs["format"] == "directory-path"
+        assert app.converter.fields["d"].attrs["format"] == "directory-path"
         assert inp.validators[-1].function.__name__ == "valid_folder"
         assert not inp.is_valid
         await load_and_check(pilot)
@@ -184,7 +188,9 @@ class NumberModel(TBaseModel):
 
 async def test_number_form():
     async with FormApp(model=NumberModel).run_test() as pilot:
-        form = pilot.app.form
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        form = app.form
         inp = form.get_input("i")
         assert inp.form_data is None
         assert not inp.is_valid
@@ -211,14 +217,16 @@ class BooleanModel(TBaseModel):
 
 async def test_bool_form():
     async with FormApp(model=BooleanModel).run_test() as pilot:
-        form = pilot.app.form
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        form = app.form
         inp = form.get_input("a")
-        assert pilot.app.converter.fields["a"].required
+        assert app.converter.fields["a"].required
         assert inp.form_data is False
         assert inp.is_valid
 
         inp = form.get_input("a_n")
-        assert not pilot.app.converter.fields["a_n"].required
+        assert not app.converter.fields["a_n"].required
         assert inp.form_data is False, (
             "If the user does not touch the field, fallback to default"
         )
@@ -238,9 +246,11 @@ class ArrayStringModel(TBaseModel):
 
 async def test_array_string_form():
     async with FormApp(model=ArrayStringModel).run_test() as pilot:
-        form = pilot.app.form
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        form = app.form
         inp = form.get_input("i")
-        assert pilot.app.converter.fields["i"].required
+        assert app.converter.fields["i"].required
         assert inp.form_data == []
         assert inp.is_valid
         await load_and_check(pilot, valid_as_is=True)
@@ -262,7 +272,9 @@ class NestedModel(TBaseModel):
 async def test_nested_model():
     """Test all previous models as a nested one"""
     async with FormApp(model=NestedModel).run_test() as pilot:
-        assert pilot.app.converter.fields["bools"].field_label == "BooleanModel"
+        assert isinstance(pilot.app, FormApp)
+        app = pilot.app
+        assert app.converter.fields["bools"].field_label == "BooleanModel"
         await load_and_check(pilot)
 
 
