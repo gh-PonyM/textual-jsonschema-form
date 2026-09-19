@@ -1,0 +1,20 @@
+_commit: fbcfb74
+_src_path: https://gitlab.com/pony_m/opencode-templates
+agents:
+- python
+- review
+- pytester
+- architect
+- analyst
+- plan
+commands:
+- review
+custom_default_model: ''
+model_provider: Opencode
+opencode_config: false
+repo_profiles:
+- python
+skills:
+- skill-writer
+- python-coding
+- test-python
