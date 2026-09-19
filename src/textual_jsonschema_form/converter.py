@@ -85,21 +85,22 @@ class TextualStringParam(InputBase):
 
     def get_options(self):
         choices = self.attrs.get("choices")
-        return (
-            {
+        if not self.SUGGESTER_FOR_ENUM and choices:
+            opts = {
                 "name": self.field_name,
                 "options": ((opt, opt) for opt in choices),
                 "prompt": f"Select {self.label}",
                 "allow_blank": not self.required,
-                "value": self.attrs.get("default", FormStrSelect.BLANK),
             }
-            if (not self.SUGGESTER_FOR_ENUM and choices)
-            else {
-                "type": "text",
-                "format": self.attrs.get("format"),
-                **super().get_options(),
-            }
-        )
+            default = self.attrs.get("default")
+            if default is not None:
+                opts["value"] = default
+            return opts
+        return {
+            "type": "text",
+            "format": self.attrs.get("format"),
+            **super().get_options(),
+        }
 
 
 @textual_converter.register("boolean")

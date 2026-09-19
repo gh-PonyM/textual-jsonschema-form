@@ -74,7 +74,6 @@ async def load_and_check(pilot, valid_as_is: bool = False):
 
 
 class StringModel(TBaseModel):
-
     _test_data: ClassVar[dict] = {"s": "Anderson Paak is great", "c": "B"}
 
     s: str
@@ -100,9 +99,9 @@ async def test_string_form():
 
         assert pilot.app.converter.fields["c"].required
         assert not inp._allow_blank, "Select widget is required"
-        assert (
-            inp.form_data == "A"
-        ), "The widget has no blank option and uses the first choice as default"
+        assert inp.form_data == "A", (
+            "The widget has no blank option and uses the first choice as default"
+        )
         assert inp.is_valid
 
         inp = form.get_input("c_d")
@@ -175,7 +174,6 @@ async def test_string_format_form(temporary_directory):
 
 
 class NumberModel(TBaseModel):
-
     _test_data: ClassVar[dict] = {"i": 5, "f": 0.1, "c": 15}
 
     i: int
@@ -221,9 +219,9 @@ async def test_bool_form():
 
         inp = form.get_input("a_n")
         assert not pilot.app.converter.fields["a_n"].required
-        assert (
-            inp.form_data is False
-        ), "If the user does not touch the field, fallback to default"
+        assert inp.form_data is False, (
+            "If the user does not touch the field, fallback to default"
+        )
         assert inp.is_valid
         await load_and_check(pilot, valid_as_is=True)
 
@@ -304,13 +302,13 @@ async def test_user_form_app():
         form = app.query_one(FormContainer)
         field_id = "first_name"
         label = form.get_field_label(field_id)
-        assert str(label.renderable) == f"{first_name.label}^"
+        assert str(label.render().plain) == f"{first_name.label}^"
 
         field_id = "vegetarian"
         label = form.get_field_label(field_id)
-        assert (
-            str(label.renderable) == f"{veggie.description}"
-        ), "Switch should use description by default if it's not too long"
+        assert str(label.render().plain) == f"{veggie.description}", (
+            "Switch should use description by default if it's not too long"
+        )
 
         # Load data into form
         for attr in ("first_name", "age"):

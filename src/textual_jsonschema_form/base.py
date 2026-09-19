@@ -64,7 +64,7 @@ class FormContainer(BaseForm):
         if not self.model or not self.model.fields:
             yield Static("This form is emtpy")
             return
-        yield from self._compose(self.model)
+        yield from self._build_form(self.model)
 
     def watch_model(self):
         pass
@@ -106,10 +106,9 @@ class FormContainer(BaseForm):
     # async def _on_compose(self, event: events.Compose) -> None:
     #     _rich_traceback_omit = True
     #     event.prevent_default()
-    #     await self._compose(self.model)
+    #     await self._build_form(self.model)
 
-    def _compose(
-
+    def _build_form(
         self, model, parent_id: str | None = None, parent_label: str | None = None
     ) -> ComposeResult:
         for name, field in model.fields.items():
@@ -118,7 +117,7 @@ class FormContainer(BaseForm):
                 with self.SUBFORM_CONTAINER_WIDGET(
                     id=id_, classes=self.SUB_FORM_CONTAINER_CLASS
                 ):
-                    yield from self._compose(
+                    yield from self._build_form(
                         model=field,
                         parent_id=id_,
                         parent_label=self._label_text(

@@ -3,7 +3,9 @@ from __future__ import annotations
 import abc
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, TypeVar
+
+ValidatorType = TypeVar("ValidatorType")
 
 
 def strip_cmp_path(ref: str) -> str:
