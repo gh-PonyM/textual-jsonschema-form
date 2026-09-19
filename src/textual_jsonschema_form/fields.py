@@ -23,7 +23,7 @@ from textual.widgets import (
     Switch,
 )
 from textual.widgets._input import InputType, InputValidationOn
-from textual.widgets._select import NoSelection
+from textual.widgets.select import NoSelection
 
 from .validators import (
     NumberRange,
@@ -227,7 +227,7 @@ class BaseForm(Container):
     def validation_errors(self) -> Generator[tuple[str, list[str]], None, None]:
         """Returns the validation errors as list for each field with a shown validation field"""
         for f in self.validation_fields():
-            yield f.id, f._renderable._object
+            yield f.id, f._pretty_renderable._object
 
     def info_field(self, input_id: str) -> ValidationInfo:
         """Returns the validation info field for a given input field id"""
@@ -362,7 +362,7 @@ class FormInput(Input):
             "path": Path,
             "file-path": Path,
             "directory-path": Path,
-            "date": lambda x: datetime.strptime(x, cls.INPUT_DATETIME_FORMAT).date(),
+            "date": lambda x: datetime.strptime(x, cls.INPUT_DATE_FORMAT).date(),
             "date-time": lambda x: datetime.strptime(x, cls.INPUT_DATETIME_FORMAT),
             None: default,
         }.get(fmt, default)
@@ -438,7 +438,7 @@ class FormStrSelect(Select[str]):
 
     @property
     def form_data(self) -> str | None:
-        if isinstance(self.value, NoSelection) or self.value == Select.BLANK:
+        if isinstance(self.value, NoSelection) or self.value is Select.NULL:
             return None
         return self.value
 
