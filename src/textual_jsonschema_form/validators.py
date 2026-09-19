@@ -28,9 +28,9 @@ class NumberRange(Number):
             return is_valid
         if self.exclusive_minimum is not None and value <= self.exclusive_minimum:
             return False
-        if self.exclusive_maximum is not None and value >= self.exclusive_maximum:
-            return False
-        return True
+        return not (
+            self.exclusive_maximum is not None and value >= self.exclusive_maximum
+        )
 
     def describe_failure(self, failure: Failure) -> str | None:
         if isinstance(failure, Number.NotInRange):
@@ -93,9 +93,7 @@ def is_absolute_path(value: str, valid_empty: bool = True) -> bool:
     p = Path(value)
     if p.expanduser().parts != p.parts:
         return True
-    if p.resolve().parts != p.parts:
-        return False
-    return True
+    return p.resolve().parts == p.parts
 
 
 @lru_cache(maxsize=64)

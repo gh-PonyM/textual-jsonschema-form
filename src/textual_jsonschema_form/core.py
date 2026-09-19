@@ -3,10 +3,7 @@ from __future__ import annotations
 import abc
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import ClassVar, Generic, TypeVar
-
-FactoryType = TypeVar("FactoryType")
-ValidatorType = TypeVar("ValidatorType")
+from typing import ClassVar
 
 
 def strip_cmp_path(ref: str) -> str:
@@ -16,7 +13,7 @@ def strip_cmp_path(ref: str) -> str:
 
 
 @dataclass
-class JSONFieldParametersBase(Generic[FactoryType, ValidatorType], abc.ABC):
+class JSONFieldParametersBase[FactoryType, ValidatorType](abc.ABC):
     """The Base Adapter to convert a json-schema using different converters to end up with
     different object adapters or to generate code out of those converters"""
 

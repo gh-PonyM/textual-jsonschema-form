@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import date
-from enum import Enum
+from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -15,7 +15,7 @@ from textual_jsonschema_form import FormContainer, JsonSchemaTree
 from textual_jsonschema_form.converter import TextualObjectParams
 
 
-class Interests(str, Enum):
+class Interests(StrEnum):
     SPORTS = "Sports"
     TV = "TV"
     MATH = "Math"

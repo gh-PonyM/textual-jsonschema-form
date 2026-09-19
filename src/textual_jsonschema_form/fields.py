@@ -389,9 +389,7 @@ class FormInput(Input):
         if self.format in self.ALWAYS_REVALIDATE_FORMATS:
             return False
         classes = self.classes
-        if "-valid" in classes or "-invalid" in classes:
-            return True
-        return False
+        return "-valid" in classes or "-invalid" in classes
 
     @property
     def is_valid(self) -> bool:
