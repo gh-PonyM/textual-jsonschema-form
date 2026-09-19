@@ -6,6 +6,10 @@ inputs:
     required: false
     description: "The python version to use"
     default: "3.12"
+  uv-sync-args:
+    required: false
+    description: "Additional arguments to pass to uv sync (e.g. '--group docs')"
+    default: ""
 
 runs:
   using: "composite"
@@ -19,5 +23,5 @@ runs:
       uses: astral-sh/setup-uv@v4
 
     - name: Install dependencies
-      run: uv sync
+      run: uv sync ${{ inputs.uv-sync-args }}
       shell: bash

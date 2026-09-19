@@ -59,6 +59,8 @@ jobs:
 
       - name: Set up the environment
         uses: ./.github/actions/setup-uv-env
+        with:
+          uv-sync-args: "--group docs"
 
       - name: Check if documentation can be built
         run: uv run mkdocs build -s
